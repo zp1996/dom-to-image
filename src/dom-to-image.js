@@ -29,6 +29,12 @@
         }
     };
 
+    // Ignore css property which not invalid in chromium
+    // such as backdrop-filter not support non-composited
+    var cssBlockPropertyMap = {
+        'backdrop-filter': true
+    };
+
     if (typeof module !== 'undefined')
         module.exports = domtoimage;
     else
@@ -236,6 +242,9 @@
 
                     function copyProperties(source, target) {
                         util.asArray(source).forEach(function (name) {
+                            if (Object.prototype.hasOwnProperty.call(cssBlockPropertyMap, name)) {
+                                return;
+                            }
                             target.setProperty(
                                 name,
                                 source.getPropertyValue(name),
